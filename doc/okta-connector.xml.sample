@@ -1,0 +1,45 @@
+<!-- BEGIN_INCLUDE(okta:create-user) -->
+    <okta:create-user profile="#[message.payload]" activate="true"/>
+<!-- END_INCLUDE(okta:create-user) -->
+<!-- BEGIN_INCLUDE(okta:get-user) -->
+    <okta:get-user id="12345"/>
+<!-- END_INCLUDE(okta:get-user) -->
+<!-- BEGIN_INCLUDE(okta:list-users) -->
+    <okta:list-users limit="10"/>
+<!-- END_INCLUDE(okta:list-users) -->
+<!-- BEGIN_INCLUDE(okta:update-user) -->
+    <okta:update-user profile="#[message.payload]" id="12345"/>
+<!-- END_INCLUDE(okta:update-user) -->
+<!-- BEGIN_INCLUDE(okta:get-user-app-links) -->
+    <okta:get-user-app-links id="12345"/>
+<!-- END_INCLUDE(okta:get-user-app-links) -->
+<!-- BEGIN_INCLUDE(okta:get-user-groups) -->
+    <okta:get-user-groups id="12345"/>
+<!-- END_INCLUDE(okta:get-user-groups) -->
+<!-- BEGIN_INCLUDE(okta:activate-user) -->
+    <okta:activate-user id="12345" sendEmail="true"/>
+<!-- END_INCLUDE(okta:activate-user) -->
+<!-- BEGIN_INCLUDE(okta:deactivate-user) -->
+    <okta:deactivate-user id="12345"/>
+<!-- END_INCLUDE(okta:deactivate-user) -->
+<!-- BEGIN_INCLUDE(okta:unlock-user) -->
+    <okta:unlock-user id="12345"/>
+<!-- END_INCLUDE(okta:unlock-user) -->
+<!-- BEGIN_INCLUDE(okta:reset-password) -->
+    <okta:reset-password id="12345" sendEmail="true"/>
+<!-- END_INCLUDE(okta:reset-password) -->
+<!-- BEGIN_INCLUDE(okta:expire-password) -->
+    <okta:expire-password id="12345" tempPassword="true"/>
+<!-- END_INCLUDE(okta:expire-password) -->
+<!-- BEGIN_INCLUDE(okta:forgot-password) -->
+    <okta:forgot-password id="12345" sendEmail="true"/>
+<!-- END_INCLUDE(okta:forgot-password) -->
+<!-- BEGIN_INCLUDE(okta:password-recovery) -->
+    <okta:password-recovery id="12345"/>
+<!-- END_INCLUDE(okta:password-recovery) -->
+<!-- BEGIN_INCLUDE(okta:change-password) -->
+    <okta:change-password id="12345"/>
+<!-- END_INCLUDE(okta:change-password) -->
+<!-- BEGIN_INCLUDE(okta:change-recovery-question) -->
+    <okta:change-recovery-question id="12345"/>
+<!-- END_INCLUDE(okta:change-recovery-question) -->
