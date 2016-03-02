@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:okta="http://www.mulesoft.org/schema/mule/okta"
+	xmlns="http://www.mulesoft.org/schema/mule/core" 
+	xmlns:mock="http://www.mulesoft.org/schema/mule/mock" 
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" 
+	xmlns:json="http://www.mulesoft.org/schema/mule/json" 
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:core="http://www.mulesoft.org/schema/mule/core" version="EE-3.6.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/okta http://www.mulesoft.org/schema/mule/okta/current/mule-okta.xsd
+http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd
+http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+	<spring:import resource="global.xml" />
+	
+	<munit:test name="SessionsTest" description="Create,Validate,Close Test">
+		<expression-component>
+			Map auth = new HashMap();
+			auth.put("username", "eugene.berman@mulesoft.com");
+			auth.put("password", "Muleftw123");
+			
+			paylaod = auth;
+		</expression-component>
+        <json:object-to-json-transformer />
+
+		<okta:authenticate config-ref="Okta__Configuration" />      
+		
+		<json:json-to-object-transformer returnClass="java.util.Map"/>		
+		<munit:assert-true condition="#[message.payload['status'] == 'SUCCESS']" /> 
+		 
+	</munit:test>
+	
+</mule>

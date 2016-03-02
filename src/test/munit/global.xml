@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:okta="http://www.mulesoft.org/schema/mule/okta"
+	xmlns="http://www.mulesoft.org/schema/mule/core" 
+	xmlns:mock="http://www.mulesoft.org/schema/mule/mock" 
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" 
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:core="http://www.mulesoft.org/schema/mule/core"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/okta http://www.mulesoft.org/schema/mule/okta/current/mule-okta.xsd
+http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd
+http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <munit:config name="munit" mock-connectors="false" mock-inbounds="false" doc:name="Munit configuration"/>
+    
+    <okta:config name="Okta__Configuration" apiToken="009U5kVsUqYqe5HSNlFw1p5W0sfRLbH3JKr4p3zV12" host="dev-565416.oktapreview.com" doc:name="Okta: Configuration"/>
+	
+</mule>

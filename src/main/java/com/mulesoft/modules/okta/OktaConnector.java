@@ -1,68 +1,35 @@
+/**
+ * (c) 2003-2014 MuleSoft, Inc. The software in this package is published under the terms of the CPAL v1.0 license,
+ * a copy of which has been included with this distribution in the LICENSE.md file.
+ */
 package com.mulesoft.modules.okta;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
+import org.mule.api.annotations.Config;
 import org.mule.api.annotations.Connector;
-import org.mule.api.annotations.Connect;
-import org.mule.api.annotations.MetaDataKeyRetriever;
-import org.mule.api.annotations.MetaDataRetriever;
-import org.mule.api.annotations.ValidateConnection;
-import org.mule.api.annotations.ConnectionIdentifier;
-import org.mule.api.annotations.Disconnect;
-import org.mule.api.annotations.param.ConnectionKey;
+import org.mule.api.annotations.Processor;
 import org.mule.api.annotations.param.Default;
 import org.mule.api.annotations.param.Optional;
 import org.mule.api.annotations.rest.HttpMethod;
 import org.mule.api.annotations.rest.RestCall;
 import org.mule.api.annotations.rest.RestExceptionOn;
-import org.mule.api.annotations.rest.RestHeaderParam;
 import org.mule.api.annotations.rest.RestQueryParam;
 import org.mule.api.annotations.rest.RestUriParam;
-import org.mule.api.ConnectionException;
-import org.mule.api.annotations.Configurable;
-import org.mule.api.annotations.Processor;
-import org.mule.api.annotations.display.Password;
-import org.mule.common.metadata.DefaultMetaData;
-import org.mule.common.metadata.DefaultMetaDataKey;
-import org.mule.common.metadata.MetaData;
-import org.mule.common.metadata.MetaDataKey;
-import org.mule.common.metadata.MetaDataModel;
-import org.mule.common.metadata.builder.DefaultMetaDataBuilder;
 
-
+import com.mulesoft.modules.okta.config.OktaConnectorConfig;
 
 /**
  * Okta Anypoint Connector
- * @see http://developer.okta.com/docs/api/rest/users.html
- * @see http://developer.okta.com/docs/api/rest/groups.html
+ * @see http://developer.okta.com/docs/api
  *
  * @author MuleSoft, Inc.
  */
 @Connector(name="okta", schemaVersion="1.0", friendlyName="Okta", minMuleVersion="3.5")
 public abstract class OktaConnector
 {
-    /**
-     * API Token
-     */
-    @Configurable
-    @RestHeaderParam("Authorization")
-    private String apiToken;
 
-    /**
-     * Okta host name
-     */
-    @Configurable
-    @RestUriParam("host")
-    private String host;
-
-    /**
-     * Okta API Version
-     */
-    @Configurable
-    @RestUriParam("version")
-    @Default("v1")
-    private String version;
+	@Config
+	OktaConnectorConfig config;
 
     /**
      * Create new user
@@ -72,6 +39,7 @@ public abstract class OktaConnector
      * @param profile Profile attributes for user
      * @param activate Executes activation lifecycle operation when creating the user
      * @return User profile
+     * @exception IOException if the call fails
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users",
@@ -89,6 +57,7 @@ public abstract class OktaConnector
      * @param id User ID, login, or login shortname (as long as it is unambiguous)
 	 *
      * @return User profile
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}",
@@ -108,6 +77,7 @@ public abstract class OktaConnector
      * @param after Specifies the pagination cursor for the next page of users
 	 *
      * @return Array of User objects
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users",
@@ -127,6 +97,7 @@ public abstract class OktaConnector
      * @param profile Updated profile
 	 * @param id user ID
      * @return User profile
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}",
@@ -144,6 +115,7 @@ public abstract class OktaConnector
      * @param id user id
 	 *
      * @return Array of App Links
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}/appLinks",
@@ -160,6 +132,7 @@ public abstract class OktaConnector
      * @param id user id
 	 *
      * @return Array of Groups
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}/groups",
@@ -180,6 +153,7 @@ public abstract class OktaConnector
      * @param sendEmail Sends an activation email to the user if true
 	 *
      * @return empty object by default. When sendEmail is false, returns an activation link for the user to set up their account.
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}/lifecycle/activate",
@@ -199,6 +173,7 @@ public abstract class OktaConnector
      * @param id User ID
 	 *
      * @return empty object.
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}/lifecycle/deactivate",
@@ -216,6 +191,7 @@ public abstract class OktaConnector
      * @param id User ID
 	 *
      * @return empty object.
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}/lifecycle/unlock",
@@ -236,6 +212,7 @@ public abstract class OktaConnector
      * @param sendEmail Sends an activation email to the user if true
 	 *
      * @return empty object by default. When sendEmail is false, returns a link for the user to reset their password.
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}/lifecycle/reset_password",
@@ -255,6 +232,7 @@ public abstract class OktaConnector
      * @param tempPassword Sets the user's password to a temporary password, if true
 	 *
      * @return the complete user object by default. When tempPassword is true, returns the temporary password.
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}/lifecycle/expire_password",
@@ -275,6 +253,7 @@ public abstract class OktaConnector
      * @param sendEmail Sends a forgot password email to the user if true
 	 *
      * @return empty object by default. When sendEmail is false, returns a link for the user to reset their password.
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}/lifecycle/forgot_password",
@@ -298,6 +277,7 @@ public abstract class OktaConnector
      * }
 	 *
      * @return Credentials of the user
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}/credentials/forgot_password",
@@ -321,6 +301,7 @@ public abstract class OktaConnector
      * }	
 	 *
      * @return Credentials of the user
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}/credentials/change_password",
@@ -347,6 +328,7 @@ public abstract class OktaConnector
      * }	
 	 *
      * @return Credentials of the user
+     * @throws IOException
      */
     @Processor
     @RestCall(uri="https://{host}/api/{version}/users/{id}/credentials/change_recovery_question",
@@ -357,52 +339,153 @@ public abstract class OktaConnector
 
     //========================================================================
     
-	public String getApiToken() {
-		return apiToken;
-	}
-
-	public void setApiToken(String apiToken) {
-		this.apiToken = "SSWS " + apiToken;
-	}
-
-	public String getHost() {
-		return host;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
+	/**
+	 * Primary authentication with username/password credentials
+	 *
+	 * {@sample.xml ../../../doc/okta-connector.xml.sample okta:authenticate}
+	 * 
+	 * @see http://developer.okta.com/docs/api/resources/authn.html#primary-authentication
+	 * 
+	 * @param credentials The authentication object in JSON format, e.g." 
+	 * 		{ 
+	 * 			"username" : "dade.murphy@example.com", 
+	 * 			"password" : "tlpWENT2m",
+	 *          "relayState": "/myapp/some/deep/link/i/want/to/return/to",
+	 *          "context": { 
+	 *          	"ipAddress": "192.168.12.11", 
+	 *          	"userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3)",
+	 *            	"deviceToken": "26q43Ak9Eh04p7H6Nnx0m69JqYOrfVBY" 
+	 *          }
+	 *      }   
+	 *
+	 * @return authentication object: 
+	 * 		{
+  	 * 			"expiresAt": "2014-11-03T10:15:57.000Z",
+  	 *   		"status": "SUCCESS",
+  	 *   		"relayState": "/myapp/some/deep/link/i/want/to/return/to",
+  	 *   		"sessionToken": "00Fpzf4en68pCXTsMjcX8JPMctzN2Wiw4LDOBL_9pe",
+  	 *   		"_embedded": {
+  	 *     			"user": {
+  	 *       			"id": "00ub0oNGTSWTBKOLGLNR",
+  	 *       			"profile": {
+  	 *         				"login": "dade.murphy@example.com",
+  	 *         				"firstName": "Dade",
+  	 *         				"lastName": "Murphy",
+  	 *         				"locale": "en_US",
+  	 *        	 			"timeZone": "America/Los_Angeles"
+  	 *      	 		}
+  	 *     			}
+  	 *   		}
+  	 * 		}
+	 * @throws IOException
+	 */
+    @Processor
+    @RestCall(uri="https://{host}/api/{version}/sessions",
+    		  method=HttpMethod.POST, 
+    		  contentType="application/json", 
+    		  exceptions={@RestExceptionOn(expression="#[message.inboundProperties['http.status'] > 206]")} )
+    public abstract String authenticate(@Default("#[message.payload]") String credentials) throws IOException;
+ 
     
-	//==============================================================================
-/*	
-	@MetaDataKeyRetriever
-    public List<MetaDataKey> getEntities() throws Exception {
-        List<MetaDataKey> entities = new ArrayList<MetaDataKey>();
-        entities.add(new DefaultMetaDataKey("User_id","User"));
-//        entities.add(new DefaultMetaDataKey("Author_id","Author"));
-//        entities.add(new DefaultMetaDataKey("BookList_id","BookList"));
-        return entities;
+    /*
+
+
+Change Expired Password
+POST /authn/credentials/change_password
+
+Enroll Factor
+POST /authn/factor
+
+Activate Factor
+POST /authn/factors/:fid/lifecycle/activate
+
+Verify Factor
+POST /authn/factors/:fid/verify
+     */
+    
+    //========================================================================
+    
+    
+    /**
+     * Creates a new session for a user with a valid session token. 
+     *
+     * {@sample.xml ../../../doc/okta-connector.xml.sample okta:create-session}
+     * @see http://developer.okta.com/docs/api/resources/sessions.html#create-session-with-session-token
+     * 
+     * @param sessionToken The valid Session token (obtained by authenticating) in JSON format, e.g.:
+	 *		{
+     *			"sessionToken": "00HiohZYpJgMSHwmL9TQy7RRzuY-q9soKp1SPmYYow"
+   	 *		}	
+   	 * @param additionalFields Optional session properties, comma-separated
+   	 * @return session and user IDs:
+   	 * 		{
+     *			"id": "101yT5gGJ3KRQyXKWqNMUsbqw",
+     *			"userId": "00u57id14rji6Kmui0h7",
+     *			"mfaActive": false
+   	 * 		}
+     * @throws IOException
+     */
+    @Processor
+    @RestCall(uri="https://{host}/api/{version}/sessions",
+    		  method=HttpMethod.POST, 
+    		  contentType="application/json", 
+    		  exceptions={@RestExceptionOn(expression="#[message.inboundProperties['http.status'] > 206]")} )
+    public abstract String createSession(@Default("#[message.payload]") String sessionToken, @Optional @RestQueryParam("additionalFields")  String additionalFields) throws IOException;
+    
+    /**
+     * Validate/extend an existing session. This method can be used instead of GET /sessions/{id} because it both validates the session and extends its lifetime. 
+     *
+     * {@sample.xml ../../../doc/okta-connector.xml.sample okta:extend-session}
+     * @see http://developer.okta.com/docs/api/resources/sessions.html#extend-session
+     * 
+     * @param sessionToken The valid Session token (obtained by authenticating)
+	 *	
+   	 * @return session and user IDs:
+   	 * 		{
+     *			"id": "101yT5gGJ3KRQyXKWqNMUsbqw",
+     *			"userId": "00u57id14rji6Kmui0h7",
+     *			"mfaActive": false
+   	 * 		}
+     * @throws IOException
+     */
+    @Processor
+    @RestCall(uri="https://{host}/api/{version}/sessions/{sessionId}",
+    		  method=HttpMethod.PUT, 
+    		  contentType="application/json", 
+    		  exceptions={@RestExceptionOn(expression="#[message.inboundProperties['http.status'] > 206]")})
+    public abstract String extendSession(@Default("#[message.payload]") @RestUriParam("sessionId") String sessionId) throws IOException;
+    
+    /**
+     * Closes a user's session (logout).
+     *
+     * {@sample.xml ../../../doc/okta-connector.xml.sample okta:close-session}
+     * @see http://developer.okta.com/docs/api/resources/sessions.html#close-session
+     * 
+     * @param sessionToken The valid Session token (obtained by authenticating)
+     * 
+   	 * @return session and user IDs:
+   	 * 		{
+     *			"id": "101yT5gGJ3KRQyXKWqNMUsbqw",
+     *			"userId": "00u57id14rji6Kmui0h7",
+     *			"mfaActive": false
+   	 * 		}
+     * @throws IOException
+     */
+    @Processor
+    @RestCall(uri="https://{host}/api/{version}/sessions/{sessionId}",
+    		  method=HttpMethod.PUT, 
+    		  contentType="application/json", 
+    		  exceptions={@RestExceptionOn(expression="#[message.inboundProperties['http.status'] > 206]")})
+    public abstract String closeSession(@Default("#[message.payload]") @RestUriParam("sessionId") String sessionId) throws IOException;
+   
+    //========================================================================
+ 
+    public OktaConnectorConfig getConfig() {
+        return config;
     }
-	
 
-	@MetaDataRetriever
-    public MetaData describeEntity(MetaDataKey entityKey) throws Exception {
-        //Here we describe the entity depending on the entity key
-        if ("User_id".equals(entityKey.getId())) {
-            MetaDataModel userModel =  new DefaultMetaDataBuilder().createList().
-            return new DefaultMetaData(userModel);
-        }
+    public void setConfig(OktaConnectorConfig config) {
+        this.config = config;
+    }
 
-
-        throw new RuntimeException(String.format("This entity %s is not supported",entityKey.getId()));
-   }
-*/   
 }

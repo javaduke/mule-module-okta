@@ -43,3 +43,12 @@
 <!-- BEGIN_INCLUDE(okta:change-recovery-question) -->
     <okta:change-recovery-question id="12345"/>
 <!-- END_INCLUDE(okta:change-recovery-question) -->
+
+
+<!-- BEGIN_INCLUDE(okta:authenticate) -->
+	<okta:authenticate/>
+<!-- END_INCLUDE(okta:authenticate) -->
+
+<!-- BEGIN_INCLUDE(okta:close-session) -->
+	<okta:close-session/>
+<!-- END_INCLUDE(okta:close-session) -->
